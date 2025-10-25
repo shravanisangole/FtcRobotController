@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Launcher", group="Spart10_Code")
+@TeleOp(name="Launcher", group="Spart10_Code")
 public class Launcher extends LinearOpMode {
 
     private DcMotor launcher;
@@ -24,21 +25,35 @@ public class Launcher extends LinearOpMode {
         telemetry.addLine("Ready. Press START.");
         telemetry.update();
         waitForStart();
-        int i = 0;
-       while (i < 10) {
 
-           launcher.setPower(FWD_SPEED);
-           sleep(FWD_MS);
+        boolean canPress = true;
+        while (opModeIsActive()) {
+            if(gamepad1.a && canPress) {
+                launch_three();
+                canPress = false;
+            }
+            if(!gamepad1.a){
+                canPress = true;
+            }
 
-           launcher.setPower(-REV_SPEED);
-           sleep(REV_MS);
+        }
 
-           launcher.setPower(0);
-           telemetry.addLine("Done.");
-           telemetry.update();
-           telemetry.update();
-           i = i +1;
-       }
+       telemetry.addLine("Done.");
+       telemetry.update();
+       telemetry.update();
 
+    }
+
+    private void launch_three(){
+        launch();
+        launch();
+        launch();
+    }
+    private void launch() {
+        launcher.setPower(FWD_SPEED);
+        sleep(FWD_MS);
+        launcher.setPower(-REV_SPEED);
+        sleep(REV_MS);
+        launcher.setPower(0);
     }
 }
